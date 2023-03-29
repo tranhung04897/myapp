@@ -45,4 +45,10 @@ class OrderInfomation < ApplicationRecord
       .where.not(osi_ca: ['', nil])
       .group('osi_ca, month_date')
   }
+
+  scope :load_value_by_booker, lambda {
+    select('osi_booker, DATE_FORMAT(issue_date, "%m/%Y") as month_date, SUM(fare + charge) AS total_value')
+      .where.not(osi_ca: ['', nil])
+      .group('osi_booker, month_date')
+  }
 end

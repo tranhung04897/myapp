@@ -79,39 +79,73 @@
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Chart</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-              <div class='row'>
-                <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
+      </div>
+      <div class="col-md-12">
+        <div class="card shadow mb-4">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Osi CA</h6>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <% @month_years.each do |month| %>
+                      <th><%= month %></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @osi_cas.each do |key, value| %>
                     <tr>
-                      <th>Month</th>
+                      <td>
+                        <%= value %>
+                      </td>
                       <% @month_years.each do |month| %>
-                        <th><%= month %></th>
+                        <td><%= load_value_osi(@total_by_osis.dig(key)&.dig(month)) %></td>
                       <% end %>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <% @osi_cas.each do |key, value| %>
-                      <tr>
-                        <td>
-                          <%= value %>
-                        </td>
-                        <% @month_years.each do |month| %>
-                          <td><%= load_value_osi(@total_by_osis.dig(key)&.dig(month)) %></td>
-                        <% end %>
-                      </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card shadow mb-4">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Osi Booker</h6>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <% @month_years.each do |month| %>
+                      <th><%= month %></th>
                     <% end %>
-                  </tbody>
-                </table>
-              </div>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @osi_bookers.each do |key, value| %>
+                    <tr>
+                      <td>
+                        <%= value %>
+                      </td>
+                      <% @month_years.each do |month| %>
+                        <td><%= load_value_osi(@total_by_osis_booker.dig(key)&.dig(month)) %></td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
