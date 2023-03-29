@@ -92,7 +92,7 @@
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
-                    <th>Month</th>
+                    <th>Osi Name</th>
                     <% @month_years.each do |month| %>
                       <th><%= month %></th>
                     <% end %>
@@ -127,7 +127,7 @@
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
-                    <th>Month</th>
+                    <th>Osi Name</th>
                     <% @month_years.each do |month| %>
                       <th><%= month %></th>
                     <% end %>
@@ -161,129 +161,129 @@
   // Chart.defaults.global.defaultFontColor = '#858796';
 
   // Pie Chart Example
-  var ctx = document.getElementById("myPieChart");
-  var ctx1 = document.getElementById("myPieChart1");
-  var ctx2 = document.getElementById("myPieChart2");
-  var yValues = <%= raw @data_chart || [] %>;
-  var xValues = ["Total Added", "Total Not Add"];
-  var barColors = [
-    "#b91d47",
-    "#00aba9",
-    "#2b5797",
-    "#e8c3b9",
-    "#1e7145"
-  ];
-  var myPieChart = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: xValues,
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      title: {
-        display: true,
-        text: "Added & Not Add Values"
-      },
-       tooltips: {
-        callbacks: {
-          title: function(tooltipItem, data) {
-            return data['labels'][tooltipItem[0]['index']];
-          },
-          label: function(tooltipItem, data) {
-            var label = data['labels'][tooltipItem['index']];
-            var valueLabel = data['datasets'][0]['data'][tooltipItem['index']];
-            valueLabel = Number((valueLabel).toFixed(0)).toLocaleString().replaceAll(',', ' ')
-            return `${label} : ${valueLabel} VND`;
-          },
-        },
-      }
-    },
-    plugins: [ChartDataLabels]
+  // var ctx = document.getElementById("myPieChart");
+  // var ctx1 = document.getElementById("myPieChart1");
+  // var ctx2 = document.getElementById("myPieChart2");
+  // var yValues = <%= raw @data_chart || [] %>;
+  // var xValues = ["Total Added", "Total Not Add"];
+  // var barColors = [
+  //   "#b91d47",
+  //   "#00aba9",
+  //   "#2b5797",
+  //   "#e8c3b9",
+  //   "#1e7145"
+  // ];
+  // var myPieChart = new Chart(ctx, {
+  //   type: "pie",
+  //   data: {
+  //     labels: xValues,
+  //     datasets: [{
+  //       backgroundColor: barColors,
+  //       data: yValues
+  //     }]
+  //   },
+  //   options: {
+  //     maintainAspectRatio: false,
+  //     title: {
+  //       display: true,
+  //       text: "Added & Not Add Values"
+  //     },
+  //      tooltips: {
+  //       callbacks: {
+  //         title: function(tooltipItem, data) {
+  //           return data['labels'][tooltipItem[0]['index']];
+  //         },
+  //         label: function(tooltipItem, data) {
+  //           var label = data['labels'][tooltipItem['index']];
+  //           var valueLabel = data['datasets'][0]['data'][tooltipItem['index']];
+  //           valueLabel = Number((valueLabel).toFixed(0)).toLocaleString().replaceAll(',', ' ')
+  //           return `${label} : ${valueLabel} VND`;
+  //         },
+  //       },
+  //     }
+  //   },
+  //   plugins: [ChartDataLabels]
 
-  });
-  var xValues1 = <%= raw @osi_labels || [] %>;
-  var yValues1 = <%= raw @osi_values || [] %>;
-  var myPieChart1 = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: xValues1,
-      datasets: [
-        {
-          backgroundColor:
-            ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9",
-             "#c45850", "#f13b5d", "#fd5d93", "#c36bb7", "#6b72d5", "#43adae", "#316395", "#58bc79","#e3e85a",
-             "#f1b538", "#eb5e29", "#316395", "#994499", "#22AA99", "#AAAA11","#6633CC", "#E67300", "#8B0707",
-             "#329262", "#5574A6", "#651067","#F8F8FF", "#F5F5F5", "#DCDCDC", "#FFFFFF", "#000000", "#696969",
-             "#D3D3D3", "#BEBEBE", "#1C1C1C", "#363636", "#4F4F4F", "#696969", "#828282", "#9C9C9C", "#B5B5B5",
-             "#CFCFCF", "#E8E8E8", "#A9A9A9", "#778899", "#708090", "#C6E2FF", "#B9D3EE", "#9FB6CD", "#6C7B8B",
-             "#2F4F4F", "#97FFFF", "#8DEEEE", "#79CDCD", "#528B8B", "#EEE8AA", "#FFFAF0", "#FAFAD2", "#8B4513",
-             "#A0522D", "#FDF5E6", "#FAF0E6", "#FFEFD5", "#FFEBCD", "#FFE4B5", "#CD853F", "#F5F5DC", "#F4A460",
-             "#FFFAFA", "#EEE9E9", "#CDC9C9", "#8B8989", "#FFF5EE", "#EEE5DE", "#CDC5BF", "#8B8682", "#FAEBD7",
-             "#FFEFDB", "#EEDFCC", "#CDC0B0", "#8B8378", "#FFE4C4", "#EED5B7"],
-          data: yValues1
-        }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Values By Osi Ca'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            maxTicksLimit: 10
-          }
-        }]
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
+  // });
+  // var xValues1 = <%= raw @osi_labels || [] %>;
+  // var yValues1 = <%= raw @osi_values || [] %>;
+  // var myPieChart1 = new Chart(ctx1, {
+  //   type: 'bar',
+  //   data: {
+  //     labels: xValues1,
+  //     datasets: [
+  //       {
+  //         backgroundColor:
+  //           ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9",
+  //            "#c45850", "#f13b5d", "#fd5d93", "#c36bb7", "#6b72d5", "#43adae", "#316395", "#58bc79","#e3e85a",
+  //            "#f1b538", "#eb5e29", "#316395", "#994499", "#22AA99", "#AAAA11","#6633CC", "#E67300", "#8B0707",
+  //            "#329262", "#5574A6", "#651067","#F8F8FF", "#F5F5F5", "#DCDCDC", "#FFFFFF", "#000000", "#696969",
+  //            "#D3D3D3", "#BEBEBE", "#1C1C1C", "#363636", "#4F4F4F", "#696969", "#828282", "#9C9C9C", "#B5B5B5",
+  //            "#CFCFCF", "#E8E8E8", "#A9A9A9", "#778899", "#708090", "#C6E2FF", "#B9D3EE", "#9FB6CD", "#6C7B8B",
+  //            "#2F4F4F", "#97FFFF", "#8DEEEE", "#79CDCD", "#528B8B", "#EEE8AA", "#FFFAF0", "#FAFAD2", "#8B4513",
+  //            "#A0522D", "#FDF5E6", "#FAF0E6", "#FFEFD5", "#FFEBCD", "#FFE4B5", "#CD853F", "#F5F5DC", "#F4A460",
+  //            "#FFFAFA", "#EEE9E9", "#CDC9C9", "#8B8989", "#FFF5EE", "#EEE5DE", "#CDC5BF", "#8B8682", "#FAEBD7",
+  //            "#FFEFDB", "#EEDFCC", "#CDC0B0", "#8B8378", "#FFE4C4", "#EED5B7"],
+  //         data: yValues1
+  //       }
+  //     ]
+  //   },
+  //   options: {
+  //     legend: { display: false },
+  //     title: {
+  //       display: true,
+  //       text: 'Values By Osi Ca'
+  //     },
+  //     scales: {
+  //       yAxes: [{
+  //         ticks: {
+  //           beginAtZero: true,
+  //           maxTicksLimit: 10
+  //         }
+  //       }]
+  //     }
+  //   },
+  //   plugins: [ChartDataLabels]
+  // });
 
-  var xValues2 = <%= raw @osi_booker_labels || [] %>;
-  var yValues2 = <%= raw @osi_booker_values || [] %>;
-  var myPieChart2 = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: xValues2,
-      datasets: [
-        {
-          backgroundColor:
-            ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9",
-             "#c45850", "#f13b5d", "#fd5d93", "#c36bb7", "#6b72d5", "#43adae", "#316395", "#58bc79","#e3e85a",
-             "#f1b538", "#eb5e29", "#316395", "#994499", "#22AA99", "#AAAA11","#6633CC", "#E67300", "#8B0707",
-             "#329262", "#5574A6", "#651067","#F8F8FF", "#F5F5F5", "#DCDCDC", "#FFFFFF", "#000000", "#696969",
-             "#D3D3D3", "#BEBEBE", "#1C1C1C", "#363636", "#4F4F4F", "#696969", "#828282", "#9C9C9C", "#B5B5B5",
-             "#CFCFCF", "#E8E8E8", "#A9A9A9", "#778899", "#708090", "#C6E2FF", "#B9D3EE", "#9FB6CD", "#6C7B8B",
-             "#2F4F4F", "#97FFFF", "#8DEEEE", "#79CDCD", "#528B8B", "#EEE8AA", "#FFFAF0", "#FAFAD2", "#8B4513",
-             "#A0522D", "#FDF5E6", "#FAF0E6", "#FFEFD5", "#FFEBCD", "#FFE4B5", "#CD853F", "#F5F5DC", "#F4A460",
-             "#FFFAFA", "#EEE9E9", "#CDC9C9", "#8B8989", "#FFF5EE", "#EEE5DE", "#CDC5BF", "#8B8682", "#FAEBD7",
-             "#FFEFDB", "#EEDFCC", "#CDC0B0", "#8B8378", "#FFE4C4", "#EED5B7"],
-          data: yValues2
-        }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Values By Osi Booker'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            maxTicksLimit: 10
-          }
-        }]
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
+  // var xValues2 = <%= raw @osi_booker_labels || [] %>;
+  // var yValues2 = <%= raw @osi_booker_values || [] %>;
+  // var myPieChart2 = new Chart(ctx2, {
+  //   type: 'bar',
+  //   data: {
+  //     labels: xValues2,
+  //     datasets: [
+  //       {
+  //         backgroundColor:
+  //           ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9",
+  //            "#c45850", "#f13b5d", "#fd5d93", "#c36bb7", "#6b72d5", "#43adae", "#316395", "#58bc79","#e3e85a",
+  //            "#f1b538", "#eb5e29", "#316395", "#994499", "#22AA99", "#AAAA11","#6633CC", "#E67300", "#8B0707",
+  //            "#329262", "#5574A6", "#651067","#F8F8FF", "#F5F5F5", "#DCDCDC", "#FFFFFF", "#000000", "#696969",
+  //            "#D3D3D3", "#BEBEBE", "#1C1C1C", "#363636", "#4F4F4F", "#696969", "#828282", "#9C9C9C", "#B5B5B5",
+  //            "#CFCFCF", "#E8E8E8", "#A9A9A9", "#778899", "#708090", "#C6E2FF", "#B9D3EE", "#9FB6CD", "#6C7B8B",
+  //            "#2F4F4F", "#97FFFF", "#8DEEEE", "#79CDCD", "#528B8B", "#EEE8AA", "#FFFAF0", "#FAFAD2", "#8B4513",
+  //            "#A0522D", "#FDF5E6", "#FAF0E6", "#FFEFD5", "#FFEBCD", "#FFE4B5", "#CD853F", "#F5F5DC", "#F4A460",
+  //            "#FFFAFA", "#EEE9E9", "#CDC9C9", "#8B8989", "#FFF5EE", "#EEE5DE", "#CDC5BF", "#8B8682", "#FAEBD7",
+  //            "#FFEFDB", "#EEDFCC", "#CDC0B0", "#8B8378", "#FFE4C4", "#EED5B7"],
+  //         data: yValues2
+  //       }
+  //     ]
+  //   },
+  //   options: {
+  //     legend: { display: false },
+  //     title: {
+  //       display: true,
+  //       text: 'Values By Osi Booker'
+  //     },
+  //     scales: {
+  //       yAxes: [{
+  //         ticks: {
+  //           beginAtZero: true,
+  //           maxTicksLimit: 10
+  //         }
+  //       }]
+  //     }
+  //   },
+  //   plugins: [ChartDataLabels]
+  // });
 </script>

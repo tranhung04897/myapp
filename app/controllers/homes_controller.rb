@@ -15,8 +15,9 @@ class HomesController < ApplicationController
     # osi_bookers = OsiBooker.pluck(:code, :name).to_h
     # @osi_booker_labels = orders_osi_booker.keys.map { |osi| osi.blank? ? 'No Osi Bookers' : osi_bookers[osi] }
     # @osi_booker_values = orders_osi_booker.values.map { |osis| osis.sum(&:nat_amt) }
-    @month_years = OrderInfomation.select("DATE_FORMAT(issue_date, '%m/%Y') AS month_date")
-                                  .distinct.map(&:month_date)
+    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date").distinct
+    month_years = month_years.map {|e| e.month_date.to_date }.sort
+    @month_years = month_years.map { |e| e.strftime("%m/%Y") }
     @osi_cas = OsiCa.pluck(:code, :name).to_h
     total_by_osis = OrderInfomation.load_value_by_osi
     data = {}
