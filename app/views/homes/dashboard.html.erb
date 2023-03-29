@@ -88,26 +88,36 @@
             <!-- Card Body -->
             <div class="card-body">
               <div class='row'>
-                <div class="col-md-12 chart-pie pt-4">
-                  <canvas id="myPieChart"></canvas>
-                </div>
-                <div class="col-md-12 pt-4">
-                  <canvas id="myPieChart1"></canvas>
-                </div>
-                <div class="col-md-12 pt-4">
-                  <canvas id="myPieChart2"></canvas>
-                </div>
+                <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <% @month_years.each do |month| %>
+                        <th><%= month %></th>
+                      <% end %>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @osi_cas.each do |key, value| %>
+                      <tr>
+                        <td>
+                          <%= value %>
+                        </td>
+                        <% @month_years.each do |month| %>
+                          <td><%= load_value_osi(@total_by_osis.dig(key)&.dig(month)) %></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- /.container-fluid -->
   </div>
-  <!-- End of Main Content -->
-  <!-- Footer -->
-  <!-- End of Footer -->
 </div>
 <!-- End of Content Wrapper -->
 

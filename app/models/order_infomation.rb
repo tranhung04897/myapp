@@ -39,4 +39,10 @@ class OrderInfomation < ApplicationRecord
     order(Arel.sql("field(class_ticket, 'J', 'C', 'D', 'I', 'W', 'Z', 'U', 'Y', 'B', 'M', 'S', 'H',
                                         'K', 'L', 'Q', 'N', 'R', 'T', 'E', 'P', 'A', 'G')"))
   }
+
+  scope :load_value_by_osi, lambda {
+    select('osi_ca, DATE_FORMAT(issue_date, "%m/%Y") as month_date, SUM(fare + charge) AS total_value')
+      .where.not(osi_ca: ['', nil])
+      .group('osi_ca, month_date')
+  }
 end
