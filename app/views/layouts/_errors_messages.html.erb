@@ -1,0 +1,21 @@
+<% if @errors.present? %>
+  <div class="alert alert-danger show-error">
+    <ul class='mb-0'>
+      <% @errors.each do |msg| %>
+        <% next if msg.blank? %>
+        <li class="error_notice list-unstyled"><%= msg.html_safe %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @success.present? %>
+  <div class="alert alert-success">
+    <ul class='mb-0'>
+      <% @success.each do |msg| %>
+        <% next if msg.blank? %>
+        <li class="error_notice list-unstyled"><%= msg.html_safe %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

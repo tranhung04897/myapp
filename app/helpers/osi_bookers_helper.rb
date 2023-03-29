@@ -1,0 +1,2 @@
+module OsiBookersHelper
+end

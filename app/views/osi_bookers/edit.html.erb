@@ -1,0 +1,32 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class="col-md-12 ml-auto mr-auto">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              Osi Booker
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="col-md-12 ml-auto mr-auto">
+              <%= form_for(@osi_booker, html: { local: true, data: { turbo: false }}) do |f| %>
+                <%= render 'layouts/error_messages', model: f.object %>
+                <%= render partial: 'form', locals: {f: f} %>
+                <div class='col-md-12'>
+                  <div class="text-center">
+                    <%= link_to "Back to Osi CAS", osi_bookers_path, class: 'btn btn-secondary' %>
+                    <%= f.submit "Update Osi CA", class: 'btn btn-primary' %>
+                  </div>
+                </div>
+                <hr>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

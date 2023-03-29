@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @osi_booker %>
+
+<div>
+  <%= link_to "Edit this osi booker", edit_osi_booker_path(@osi_booker) %> |
+  <%= link_to "Back to osi bookers", osi_bookers_path %>
+
+  <%= button_to "Destroy this osi booker", @osi_booker, method: :delete %>
+</div>

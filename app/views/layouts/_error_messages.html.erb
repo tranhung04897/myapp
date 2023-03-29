@@ -1,0 +1,10 @@
+<% if model.errors.any? %>
+  <div class="alert alert-danger show-error">
+    <ul class='mb-0'>
+      <% model.errors.messages.each do |attr, msg| %>
+        <% next if msg.blank? %>
+        <li class="error_notice list-unstyled"><%= model.errors.full_messages_for(attr).first.html_safe %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

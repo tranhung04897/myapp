@@ -1,0 +1,69 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class="col-md-12 ml-auto mr-auto">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              Download Orders
+            </h4>
+          </div>
+          <div class="card-body">
+            <div id='errorsMessage'>
+              <%= render 'layouts/errors_messages' %>
+            </div>
+            <div class="col-md-12 ml-auto mr-auto">
+              <%= form_with url: download_data_order_infomations_path, local: true, html: {'data-turbo': false, class: 'form-download' } do %>
+                <div class='col-md-12'>
+                  <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :year_issue_date, "Year of Issue Date", class: 'form-label' %>
+                      <%= select_tag :year_issue_date, options_for_select(@year_export || [], params[:year_issue_date]), include_blank: true, class: 'form-select' %>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :month_issue_date, "Month of Issue Date", class: 'form-label' %>
+                      <%= select_tag :month_issue_date, options_for_select(@month_export || [], params[:month_issue_date]), include_blank: true, class: 'form-select' %>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :year_flt_date, "Year of FLT Date", class: 'form-label' %>
+                      <%= select_tag :year_flt_date, options_for_select(@year_flt || [], params[:year_flt_date]), include_blank: true, class: 'form-select' %>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :month_flt_date, "Month of FLT Date", class: 'form-label' %>
+                      <%= select_tag :month_flt_date, options_for_select(@month_flt || [], params[:month_flt_date]), include_blank: true, class: 'form-select' %>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :osi_ca, "Osi Cas", class: 'form-label' %>
+                      <%= select_tag :osi_ca, options_for_select(@osi_cas || [], params[:osi_ca]), class: 'form-select', multiple: true %>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :osi_booker, "Osi Bookers", class: 'form-label' %>
+                      <%= select_tag :osi_booker, options_for_select(@osi_bookers || [], params[:osi_booker]), class: 'form-select', multiple: true %>
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-12'>
+                  <div class="text-center">
+                    <%= submit_tag "Download", class: 'btn btn-primary' %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#osi_ca").select2({});
+    $("#osi_booker").select2({});
+  })
+</script>

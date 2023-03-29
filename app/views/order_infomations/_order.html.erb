@@ -1,0 +1,44 @@
+<% @orders.each do |osi| %>
+  <tr data-controller="update-orders" >
+    <%= form_with url: update_order_order_infomations_path, html: { id: "myForm_#{osi.id}" } do %>
+      <%= hidden_field_tag :osi_id, osi.id %>
+      <td>
+        <div class="text-center">
+          <label class="input-checkbox">
+            <input data-index="0" name="btSelectItem" type="checkbox" osi-id="<%= osi.id %>">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </td>
+      <td><%= osi.issue_date&.strftime('%-d/%m/%Y') %></td>
+      <td><%= text_field_tag :flt_date, osi.flt_date&.strftime('%-d/%m/%Y'), { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %></td>
+      <td>
+        <%= osi.ticket_number %>
+        <%= hidden_field_tag :ticket_number, osi.ticket_number %>
+      </td>
+      <td><%= osi.pax_name %></td>
+      <td><%= osi.route %></td>
+      <td>
+        <%= osi.type_ticket %>
+        <%= hidden_field_tag :type_ticket, osi.type_ticket %>
+      </td>
+      <td><%= osi.pnr %></td>
+      <td>
+        <%= text_field_tag :coupon_status, osi.coupon_status, { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %>
+      </td>
+      <td><%= osi.class_ticket %></td>
+      <td>
+        <%= text_field_tag :ag, osi.ag, { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %>
+      </td>
+      <td>
+        <%= text_field_tag :osi_ca, osi.osi_ca, { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %>
+      </td>
+      <td>
+        <%= text_field_tag :osi_booker, osi.osi_booker, { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %>
+      </td>
+      <td><%= osi.fare %></td>
+      <td><%= osi.charge %></td>
+      <td><%= osi.saler %></td>
+    <% end %>
+  </tr>
+<% end %>

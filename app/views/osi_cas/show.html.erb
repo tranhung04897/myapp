@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @osi_ca %>
+
+<div>
+  <%= link_to "Edit this osi ca", edit_osi_ca_path(@osi_ca) %> |
+  <%= link_to "Back to osi cas", osi_cas_path %>
+
+  <%= button_to "Destroy this osi ca", @osi_ca, method: :delete %>
+</div>

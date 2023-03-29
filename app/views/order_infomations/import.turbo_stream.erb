@@ -1,0 +1,8 @@
+<% if @errors.present? %>
+  <%= turbo_stream.update 'errorsMessage' do %>
+    <%= render 'layouts/errors_messages', errors: @errors %>
+  <% end %>
+<% else %>
+  <div data-controller="redirect" data-redirect-url-value="<%= order_infomations_path %>">
+  </div>
+<% end %>

@@ -1,0 +1,202 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class='d-flex justify-content-between'>
+        <h1 class="h3 mb-2 text-gray-800">Osi CA</h1>
+        <div class='bg-white d-flex'>
+          <div class='mr-2'>
+            <%= form_with url: import_order_infomations_path, multipart: true, id: 'importCSVForm', class: 'import-store-form' do %>
+              <label for="upload-file" class='btn btn-success pointer-events'>Import Excel</label>
+              <%= file_field_tag :file, id: 'upload-file' %>
+              <%= submit_tag 'submit', class: 'd-none', id: 'import-file' %>
+            <% end %>
+          </div>
+          <div>
+            <%= link_to "Export Excel", export_order_infomations_path(format: "xlsx"), class: 'btn btn-success pointer-events' %>
+          </div>
+
+        </div>
+      </div>
+      <div class="card shadow mb-4 js-table-checkbox-delete">
+        <div id='flashMessage'>
+          <%= render 'layouts/flash_message', flash: flash %>
+        </div>
+        <div id='errorsMessage'>
+        </div>
+        <div class="card-body">
+          <div class='row'>
+            <div class='col-md-2 d-flex'>
+              <div class="btn-delete-box mr-2">
+                <button type="button" class="btn btn-danger btn-del-min-v1 delete-box" disabled>Delete</button>
+              </div>
+              <div>
+                <%= select_tag(:paging, options_for_select(Settings.item_paging, @current_per_page),
+                  class: 'form-control-paging form-select') %>
+              </div>
+            </div>
+            <div class='col-md-10'>
+              <div class='d-flex pb-3 justify-content-end'>
+                <div id="branches__paging" class="form-group ml-3">
+                  <%= search_form_for @q, url: order_infomations_path, class: 'd-flex' do |f| %>
+                    <%= f.search_field :flt_date_gteq, value: params[:q].try(:[], :flt_date_gteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
+                    <%= f.search_field :flt_date_lteq, value: params[:q].try(:[], :flt_date_lteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
+                    <%= f.search_field :type_ticket_cont, value: params[:q].try(:[], :type_ticket_cont), class: 'form-control ml-2', placeholder: 'T' %>
+                    <%= f.search_field :class_ticket_cont, value: params[:q].try(:[], :class_ticket_cont), class: 'form-control ml-2', placeholder: 'Class' %>
+                    <%= f.search_field :osi_ca_cont, value: params[:q].try(:[], :osi_ca_cont), class: 'form-control ml-2', placeholder: 'Osi Ca' %>
+                    <%= f.search_field :osi_booker_cont, value: params[:q].try(:[], :osi_booker_cont), class: 'form-control ml-2', placeholder: 'Osi Booker' %>
+                    <%= f.search_field :saler_cont, value: params[:q].try(:[], :saler_cont), class: 'form-control ml-2', placeholder: 'Saler' %>
+                    <%= f.submit 'Search', class: 'btn btn-secondary btn-outline ml-2' %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class='text-center'>
+                    <label class="input-checkbox checkbox-all m-0 pt-1">
+                      <input name="btSelectAll" type="checkbox">
+                      <span class="checkmark"></span>
+                    </label>
+                  </th>
+                  <th><%= sort_link(@q, :issue_date, 'Issue Date', default_order: :desc) %></th>
+                  <th><%= sort_link(@q, :flt_date, 'FLT Date') %></th>
+                  <th><%= sort_link(@q, :ticket_number, 'Ticket Nbr') %></th>
+                  <th><%= sort_link(@q, :pax_name, 'Pax Name') %></th>
+                  <th><%= sort_link(@q, :route, 'Route') %></th>
+                  <th><%= sort_link(@q, :type_ticket, 'T') %></th>
+                  <th><%= sort_link(@q, :pnr, 'PNR') %></th>
+                  <th><%= sort_link(@q, :coupon_status, 'Coupon Status') %></th>
+                  <th><%= sort_link(@q, :class_ticket, 'Class') %></th>
+                  <th><%= sort_link(@q, :ag, 'AG') %></th>
+                  <th><%= sort_link(@q, :osi_ca, 'OSI CA') %></th>
+                  <th><%= sort_link(@q, :osi_booker, 'OSI BOOKER') %></th>
+                  <th><%= sort_link(@q, :fare, 'Fare') %></th>
+                  <th><%= sort_link(@q, :charge, 'Charge') %></th>
+                  <th><%= sort_link(@q, :saler, 'Saler') %> </th>
+                </tr>
+              </thead>
+              <tbody id='renderOrder'>
+                <%= render 'order', orders: @orders %>
+              </tbody>
+            </table>
+          </div>
+          <% if @orders.present? %>
+            <div class="pagination-flex-end">
+              <%= paginate @orders %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modalDelete" class="modal fade in" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Confirmation</h5>
+        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete this record?</div>
+      <div class="modal-footer justify-content-center"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-danger" id="submitDelete" type="button">Delete</button></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // $('#dataTable').DataTable();
+    $('#upload-file').change(function(e){
+      $('#import-file').click();
+    });
+    $(".checkbox-all").on("click", function() {
+      var checked = $(this).find('input')[0].checked;
+      $(this)
+      .closest("table")
+      .find("tbody :checkbox")
+      .prop("checked", checked)
+    });
+    $("tbody :checkbox").on("click", function() {
+      $(this).closest("table")
+      .find(".checkbox-all input")
+      .prop("checked",
+        $(this)
+        .closest("table")
+        .find("tbody :checkbox:checked").length ==
+        $(this)
+        .closest("table")
+        .find("tbody :checkbox").length
+        );
+    });
+    $(document).on('change', '.input-checkbox input[type="checkbox"]', function() {
+      let $tableSelect = $(this).closest('.js-table-checkbox-delete');
+      let $selectall = $tableSelect.find('.input-checkbox input[name="btSelectAll"]');
+      let itemCheckbox = $tableSelect.find('tbody .input-checkbox input[type="checkbox"]').length;
+      let itemCheckboxChecked = $tableSelect.find('tbody .input-checkbox input[type="checkbox"]:checked').length;
+
+      if ($selectall.is(':checked') == true) {
+        $tableSelect.find('.btn-del-min-v1').attr('disabled', false);
+      } else {
+        $tableSelect.find('.btn-del-min-v1').attr('disabled', true);
+      }
+
+      if ($(this).attr('name') == 'btSelectAll') {
+        $tableSelect.find('.input-checkbox input[type="checkbox"]').prop('checked', this.checked);
+      } else {
+        if (itemCheckbox == itemCheckboxChecked) {
+          $selectall.prop("checked", true);
+        } else {
+          $selectall.prop("checked", false);
+        }
+
+        if (itemCheckboxChecked >=1 ) {
+          $tableSelect.find('.btn-del-min-v1').attr('disabled', false);
+        } else {
+          $tableSelect.find('.btn-del-min-v1').attr('disabled', true);
+        }
+      }
+    });
+    $(document).on('click', '.delete-box', function() {
+      let osiId = [];
+      $(':checkbox:checked').each(function(i) {
+        osiId[i] = $(this).attr('osi-id');
+      });
+      osiId = osiId.filter(x => x !== undefined);
+      if(osiId.length > 0){
+        $('#modalDelete').modal('show');
+      } else {
+        $('#notificationModal').modal('show');
+      }
+    });
+
+    $(document).on('click', '#submitDelete', function() {
+      $("#loader").addClass('loader-circle');
+      $('#modalDelete').modal('hide');
+      let osiId = [];
+      $(':checkbox:checked').each(function(i) {
+        osiId[i] = $(this).attr('osi-id');
+      });
+      osiId = osiId.filter(x => x !== undefined);
+      $.ajax({
+        url: '/order_infomations/delete_order',
+        type:'DELETE',
+        dataType:'script',
+        data: {
+          ids: JSON.stringify(osiId),
+        },
+        success: function(){
+          return true;
+        }
+      });
+    });
+
+    $(document).on('click', '.save-order', function() {
+      $('#update_order').submit();
+    });
+  });
+
+</script>

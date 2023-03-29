@@ -1,0 +1,199 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class='d-flex justify-content-between'>
+        <h1 class="h3 mb-2 text-gray-800">List Osi Booker</h1>
+        <div class='bg-white d-flex'>
+          <% if (can? :create, OsiCa) %>
+            <div class='mr-2'>
+              <%= link_to 'Create Osi Booker', new_osi_booker_path, class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="card shadow mb-4 js-table-checkbox-delete">
+        <% if flash.present? %>
+          <div id='flashMessage'>
+            <%= render 'layouts/flash_message', flash: flash %>
+          </div>
+        <% end %>
+        <div class="card-body">
+          <div class='row'>
+            <div class='col-md-8'>
+              <% if can? :delete, OsiBooker %>
+                <div class="btn-delete-box">
+                  <button type="button" class="btn btn-danger btn-del-min-v1 delete-box" disabled>Delete</button>
+                </div>
+              <% end %>
+            </div>
+            <div class='col-md-4'>
+              <div class='d-flex pb-3 justify-content-end'>
+                <div>
+                  <%= select_tag(:paging, options_for_select(Settings.item_paging, @current_per_page),
+                    class: 'form-control-paging form-select') %>
+                </div>
+                <div id="branches__paging" class="ml-3">
+                  <%= search_form_for @q, url: osi_cas_path, class: 'd-flex' do |f| %>
+                    <%= f.search_field :id_or_name_or_code_or_syntax_osi_cont, value: @text_search, class: 'form-control', placeholder: 'Search' %>
+                    <%= f.submit 'Search', class: 'btn btn-secondary btn-outline ml-3' %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <% if can? :delete, OsiBooker %>
+                    <th class='text-center'>
+                      <label class="input-checkbox checkbox-all m-0 pt-1">
+                        <input name="btSelectAll" type="checkbox">
+                        <span class="checkmark"></span>
+                      </label>
+                    </th>
+                  <% end %>
+                  <th><%= sort_link(@q, :id, 'ID') %></th>
+                  <th><%= sort_link(@q, :name, 'OSI BOOKER') %></th>
+                  <th><%= sort_link(@q, :code, 'OSI CODE') %></th>
+                  <th><%= sort_link(@q, :syntax_osi, 'SYNTAX') %></th>
+                  <% if can? :update, OsiBooker %>
+                    <th>ACTION</th>
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @osi_bookers.each do |osi_booker| %>
+                  <tr>
+                    <% if can? :delete, OsiBooker %>
+                      <td>
+                        <div class="text-center">
+                          <label class="input-checkbox">
+                            <input data-index="0" name="btSelectItem" type="checkbox" osi-id="<%= osi_booker.id %>">
+                            <span class="checkmark"></span>
+                          </label>
+                        </div>
+                      </td>
+                    <% end %>
+                    <td><%= osi_booker.id %></td>
+                    <td><%= osi_booker.name %></td>
+                    <td><%= osi_booker.code %></td>
+                    <td><%= osi_booker.syntax_osi %></td>
+                    <% if can? :update, OsiBooker %>
+                      <td class="text-center">
+                        <%= link_to edit_osi_booker_path(osi_booker), class: 'table-action edit', data: {original_title: 'Edit'}, rel: 'tooltip' do %>
+                          <i class="fa fa-edit"></i>
+                        <% end %>
+                      </td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-flex-end">
+            <%= paginate @osi_bookers %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modalDelete" class="modal fade in" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Confirmation</h5>
+        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete this record?</div>
+      <div class="modal-footer justify-content-center"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-danger" id="submitDelete" type="button">Delete</button></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".checkbox-all").on("click", function() {
+      var checked = $(this).find('input')[0].checked;
+      $(this)
+      .closest("table")
+      .find("tbody :checkbox")
+      .prop("checked", checked)
+    });
+    $("tbody :checkbox").on("click", function() {
+      $(this).closest("table")
+      .find(".checkbox-all input")
+      .prop("checked",
+        $(this)
+        .closest("table")
+        .find("tbody :checkbox:checked").length ==
+        $(this)
+        .closest("table")
+        .find("tbody :checkbox").length
+        );
+    });
+    $(document).on('change', '.input-checkbox input[type="checkbox"]', function() {
+      let $tableSelect = $(this).closest('.js-table-checkbox-delete');
+      let $selectall = $tableSelect.find('.input-checkbox input[name="btSelectAll"]');
+      let itemCheckbox = $tableSelect.find('tbody .input-checkbox input[type="checkbox"]').length;
+      let itemCheckboxChecked = $tableSelect.find('tbody .input-checkbox input[type="checkbox"]:checked').length;
+
+      if ($selectall.is(':checked') == true) {
+        $tableSelect.find('.btn-del-min-v1').attr('disabled', false);
+      } else {
+        $tableSelect.find('.btn-del-min-v1').attr('disabled', true);
+      }
+
+      if ($(this).attr('name') == 'btSelectAll') {
+        $tableSelect.find('.input-checkbox input[type="checkbox"]').prop('checked', this.checked);
+      } else {
+        if (itemCheckbox == itemCheckboxChecked) {
+          $selectall.prop("checked", true);
+        } else {
+          $selectall.prop("checked", false);
+        }
+
+        if (itemCheckboxChecked >=1 ) {
+          $tableSelect.find('.btn-del-min-v1').attr('disabled', false);
+        } else {
+          $tableSelect.find('.btn-del-min-v1').attr('disabled', true);
+        }
+      }
+    });
+    $(document).on('click', '.delete-box', function() {
+      let osiId = [];
+      $(':checkbox:checked').each(function(i) {
+        osiId[i] = $(this).attr('osi-id');
+      });
+      osiId = osiId.filter(x => x !== undefined);
+      if(osiId.length > 0){
+        $('#modalDelete').modal('show');
+      } else {
+        $('#notificationModal').modal('show');
+      }
+    });
+    $(document).on('click', '#submitDelete', function() {
+      $("#loader").addClass('loader-circle');
+      $('#modalDelete').modal('hide');
+      let osiId = [];
+      $(':checkbox:checked').each(function(i) {
+        osiId[i] = $(this).attr('osi-id');
+      });
+      osiId = osiId.filter(x => x !== undefined);
+      $.ajax({
+        url: '/osi_bookers/delete_osis',
+        type:'DELETE',
+        dataType:'script',
+        data: {
+          ids: JSON.stringify(osiId),
+        },
+        success: function(){
+          return true;
+        }
+      });
+    });
+  });
+</script>

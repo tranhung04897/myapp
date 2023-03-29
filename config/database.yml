@@ -1,0 +1,59 @@
+# MySQL. Versions 5.5.8 and up are supported.
+#
+# Install the MySQL driver
+#   gem install mysql2
+#
+# Ensure the MySQL gem is defined in your Gemfile
+#   gem "mysql2"
+#
+# And be sure to use new-style password hashing:
+#   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
+#
+default: &default
+  adapter: mysql2
+  charset: utf8mb4
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  pool: 20
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  reconnect: true
+
+development:
+  primary: &development
+    <<: *default
+    database: <%= ENV['DB_DATABASE'] %>
+  primary_replica:
+    <<: *development
+    host: <%= ENV['READ_DB_HOST'] %>
+    replica: true
+
+test:
+  primary: &test
+    <<: *default
+    database: <%= ENV['DB_DATABASE_TEST'] %>
+  primary_replica:
+    <<: *test
+    host: <%= ENV['READ_DB_HOST'] %>
+    replica: true
+
+staging:
+  primary: &staging
+    <<: *default
+    database: <%= ENV['DB_DATABASE'] %>
+    pool: 20
+  primary_replica:
+    <<: *staging
+    host: <%= ENV['READ_DB_HOST'] %>
+    replica: true
+
+production:
+  primary: &production
+    <<: *default
+    database: <%= ENV['DB_DATABASE'] %>
+    pool: 30
+  primary_replica:
+    <<: *production
+    host: <%= ENV['READ_DB_HOST'] %>
+    replica: true

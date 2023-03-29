@@ -1,0 +1,2 @@
+module RoleApplicationHelper
+end

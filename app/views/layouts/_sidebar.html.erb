@@ -1,0 +1,99 @@
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-center logo-header" href="/">
+    <img src="/static/imgs/logo.jpg" class='wh-100' alt="">
+  </a>
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0">
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item">
+    <%= link_to root_path, class: 'nav-link' do %>
+      <i class="fas fa-fw fa-tachometer-alt"></i>
+      <span>Dashboard</span>
+    <% end %>
+  </li>
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+  <!-- Heading -->
+  <% if can? :read, User %>
+    <div class="sidebar-heading">
+      Accounts
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+        aria-expanded="true" aria-controls="collapseTwo">
+        <i class="fas fa-users"></i>
+      <span>Account Managements</span>
+      </a>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <%= link_to 'List Users', users_path, class: 'collapse-item' %>
+          <% if (can? :create, User) %>
+            <%= link_to 'Create User', new_user_registration_path, class: 'collapse-item' %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <hr class="sidebar-divider">
+  <% end %>
+  <div class="sidebar-heading">
+    OSI CA
+  </div>
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+      aria-expanded="true" aria-controls="collapsePages">
+    <i class="fas fa-fw fa-folder"></i>
+    <span>OSI CAS</span>
+    </a>
+    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <%= link_to 'List Osi CA', osi_cas_path,class: 'collapse-item' %>
+        <% if (can? :create, OsiCa) %>
+          <%= link_to 'Create Osi CA', new_osi_ca_path,class: 'collapse-item' %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+  <hr class="sidebar-divider">
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBooker"
+      aria-expanded="true" aria-controls="collapseBooker">
+    <i class="fas fa-window-restore"></i>
+    <span>OSI Bookers</span>
+    </a>
+    <div id="collapseBooker" class="collapse" aria-labelledby="headingBooker" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <%= link_to 'List Osi Bookers', osi_bookers_path, class: 'collapse-item' %>
+        <% if (can? :create, OsiCa) %>
+          <%= link_to 'Create Osi Booker', new_osi_booker_path, class: 'collapse-item' %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+  <hr class="sidebar-divider">
+  <!-- Nav Item - Charts -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
+      aria-expanded="true" aria-controls="collapseOrder">
+    <i class="fas fa-plane-departure"></i>
+    <span>Orders</span>
+    </a>
+    <div id="collapseOrder" class="collapse" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <%= link_to 'Orders', order_infomations_path, class: 'collapse-item' %>
+        <%= link_to 'Download Orders', download_order_infomations_path, class: 'collapse-item' %>
+      </div>
+    </div>
+  </li>
+  <!-- Nav Item - Tables -->
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+</ul>
+<!-- End of Sidebar -->
