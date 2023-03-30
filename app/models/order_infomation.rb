@@ -16,7 +16,7 @@ class OrderInfomation < ApplicationRecord
   }
 
   scope :total_by_osi_ca, lambda {
-    select('osi_ca, DATE_FORMAT(issue_date, "%Y-%m") as month_date, SUM(fare + charge) AS total_value').group('osi_ca, month_date')
+    select('osi_ca, DATE_FORMAT(flt_date, "%Y-%m") as month_date, SUM(fare + charge) AS total_value').group('osi_ca, month_date')
   }
 
   scope :get_month_flt, lambda {
