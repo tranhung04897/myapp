@@ -253,7 +253,7 @@ class OrderInfomationsController < RoleApplicationController
     worksheet.append_row(['Issue date', 'FLT Date', 'Ticket Nbr', 'Pax Name', 'Route', 'T', 'PNR', 'Coupon status', 'Class',
                           'AG', 'OSI CA', 'OSI BOOKER', 'Fare', 'Charge', 'Saler'], bold)
     orders.each do |order|
-      row = [order.issue_date&.strftime("%-d/%m/%Y"), order.flt_date&.strftime("%-d/%m/%Y"), order.ticket_number, order.pax_name, order.route, order.type_ticket, order.pnr, order.coupon_status,
+      row = [order.issue_date&.strftime("%d/%m/%Y"), order.flt_date&.strftime("%d/%m/%Y"), order.ticket_number, order.pax_name, order.route, order.type_ticket, order.pnr, order.coupon_status,
             order.class_ticket, order.ag, order.osi_ca, order.osi_booker, order.fare, order.charge, order.saler]
       worksheet.append_row(row)
     end
