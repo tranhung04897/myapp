@@ -20,19 +20,19 @@ class OrderInfomation < ApplicationRecord
   }
 
   scope :get_month_flt, lambda {
-    select("MONTH(issue_date) AS month")
+    select("MONTH(flt_date) AS month")
   }
 
   scope :get_year_flt, lambda {
-    select("YEAR(issue_date) AS year")
+    select("YEAR(flt_date) AS year")
   }
 
   scope :by_year_flt, lambda { |year|
-    where("YEAR(issue_date) = ?", year)
+    where("YEAR(flt_date) = ?", year)
   }
 
   scope :by_month_flt, lambda { |month|
-    where("MONTH(issue_date) = ?", month)
+    where("MONTH(flt_date) = ?", month)
   }
 
   scope :order_by_class, lambda {
