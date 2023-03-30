@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tracking_history: one
+  action_submit: MyText
+  content: MyText
+
+two:
+  tracking_history: two
+  action_submit: MyText
+  content: MyText

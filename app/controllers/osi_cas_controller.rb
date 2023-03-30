@@ -31,6 +31,10 @@ class OsiCasController < RoleApplicationController
 
     respond_to do |format|
       if @osi_ca.save
+        tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+        content ="Name: #{@osi_ca.name}; Code: #{@osi_ca.code}; Syntax: #{@osi_ca.syntax_osi}"
+        tracking.tracking_history_details.build(action_submit: "Create New Osi", content: content)
+        tracking.save
         format.html { redirect_to osi_cas_path, success: "Osi ca was successfully created." }
         format.json { render :show, status: :created, location: @osi_ca }
       else
@@ -45,6 +49,13 @@ class OsiCasController < RoleApplicationController
     respond_to do |format|
       format.html {
         if @osi_ca.update(osi_ca_params)
+          changes = @osi_ca.previous_changes
+          tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+          changes.each do |key, value|
+            content ="Name: #{@osi_ca.name}; Code: #{@osi_ca.code}; Syntax: #{@osi_ca.syntax_osi}"
+            tracking.tracking_history_details.build(action_submit: "Create New Osi", content: content)
+          end
+          tracking.save
           redirect_to osi_cas_path(@osi_ca), success: "Osi ca was successfully updated."
         else
           render :edit

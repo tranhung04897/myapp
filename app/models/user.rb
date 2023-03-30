@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   attr_accessor :current_password, :login_id, :current_user, :new_password
 
+  has_many :tracking_histories
+
   validates :username, presence: true
   validates :username, uniqueness: { case_sensitive: false },
             format: { with: Settings.regex_email }, if: -> { username.present? }
