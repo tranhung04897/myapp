@@ -10,8 +10,8 @@
           </label>
         </div>
       </td>
-      <td><%= osi.issue_date&.strftime('%-d/%m/%Y') %></td>
-      <td><%= text_field_tag :flt_date, osi.flt_date&.strftime('%-d/%m/%Y'), { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %></td>
+      <td><%= osi.issue_date&.strftime('%d/%m/%Y') %></td>
+      <td><%= text_field_tag :flt_date, osi.flt_date&.strftime('%d/%m/%Y'), { class: 'form-control width-fit-content', data: { action: 'change->update-orders#change' }} %></td>
       <td>
         <%= osi.ticket_number %>
         <%= hidden_field_tag :ticket_number, osi.ticket_number %>

@@ -165,7 +165,8 @@ class OrderInfomationsController < RoleApplicationController
       @errors << "Ticket Number #{params[:ticket_number]}: Osi Booker not exists"
     end
     data << { id: params[:osi_id], flt_date: flt_date, ticket_number: params[:ticket_number], ag: params[:ag],
-             osi_ca: params[:osi_ca], osi_booker: params[:osi_booker], type_ticket: params[:type_ticket] }
+             osi_ca: params[:osi_ca], osi_booker: params[:osi_booker], type_ticket: params[:type_ticket],
+             coupon_status: params[:coupon_status] }
     return if @errors.present?
 
     OrderInfomation.transaction do
@@ -234,7 +235,7 @@ class OrderInfomationsController < RoleApplicationController
     worksheet.append_row(['Issue date', 'FLT Date', 'Ticket Nbr', 'Pax Name', 'Route', 'T', 'PNR', 'Coupon status', 'Class',
                           'AG', 'OSI CA', 'OSI BOOKER', 'Fare', 'Charge', 'Saler'], bold)
     orders.each do |order|
-      row = [order.issue_date&.strftime("%-d/%m/%Y"), order.flt_date&.strftime("%-d/%m/%Y"), order.ticket_number, order.pax_name, order.route, order.type_ticket, order.pnr, order.coupon_status,
+      row = [order.issue_date&.strftime("%d/%m/%Y"), order.flt_date&.strftime("%d/%m/%Y"), order.ticket_number, order.pax_name, order.route, order.type_ticket, order.pnr, order.coupon_status,
             order.class_ticket, order.ag, order.osi_ca, order.osi_booker, order.fare, order.charge, order.saler]
       worksheet.append_row(row)
     end
