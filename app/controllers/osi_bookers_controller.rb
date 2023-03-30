@@ -31,6 +31,10 @@ class OsiBookersController < RoleApplicationController
 
     respond_to do |format|
       if @osi_booker.save
+        tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+        content ="Name: #{@osi_booker.name}; Code: #{@osi_booker.code}; Syntax: #{@osi_booker.syntax_osi}"
+        tracking.tracking_history_details.build(action_submit: "Create New Osi Booker", content: content)
+        tracking.save
         format.html { redirect_to osi_bookers_path, success: "Osi booker was successfully created." }
         format.json { render :show, status: :created, location: @osi_booker }
       else
@@ -44,6 +48,18 @@ class OsiBookersController < RoleApplicationController
   def update
     respond_to do |format|
       if @osi_booker.update(osi_booker_params)
+        changes = @osi_ca.previous_changes
+        if changes.present?
+          tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+          content = ''
+          changes.each do |key, value|
+            next if ['updated_at', 'created_at'].include?(key)
+
+            content += "#{Settings.attribute_change.send(key)} updated: #{value[0]} => #{value[1]} \n"
+          end
+          tracking.tracking_history_details.build(action_submit: "Update Osi Booker", content: content)
+          tracking.save
+        end
         format.html { redirect_to osi_bookers_path, success: "Osi booker was successfully updated." }
         format.json { render :show, status: :ok, location: @osi_booker }
       else

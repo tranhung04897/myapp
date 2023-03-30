@@ -32,8 +32,8 @@ class OsiCasController < RoleApplicationController
     respond_to do |format|
       if @osi_ca.save
         tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
-        content ="Name: #{@osi_ca.name}; Code: #{@osi_ca.code}; Syntax: #{@osi_ca.syntax_osi}"
-        tracking.tracking_history_details.build(action_submit: "Create New Osi", content: content)
+        content ="Name: #{@osi_ca.name}; Code: #{@osi_ca.code}; Syntax: #{@osi_ca.syntax_osi}; Limit Value: #{@osi_ca.limit_value}"
+        tracking.tracking_history_details.build(action_submit: "Create New Osi Ca", content: content)
         tracking.save
         format.html { redirect_to osi_cas_path, success: "Osi ca was successfully created." }
         format.json { render :show, status: :created, location: @osi_ca }
@@ -50,12 +50,18 @@ class OsiCasController < RoleApplicationController
       format.html {
         if @osi_ca.update(osi_ca_params)
           changes = @osi_ca.previous_changes
-          tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
-          changes.each do |key, value|
-            content ="Name: #{@osi_ca.name}; Code: #{@osi_ca.code}; Syntax: #{@osi_ca.syntax_osi}"
-            tracking.tracking_history_details.build(action_submit: "Create New Osi", content: content)
+          if changes.present?
+            tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+            content = ''
+            changes.each do |key, value|
+              next if ['updated_at', 'created_at'].include?(key)
+
+              content += "#{Settings.attribute_change.send(key)} updated: #{value[0]} => #{value[1]} \n"
+            end
+            tracking.tracking_history_details.build(action_submit: "Update Osi Ca", content: content)
+            tracking.save
           end
-          tracking.save
+
           redirect_to osi_cas_path(@osi_ca), success: "Osi ca was successfully updated."
         else
           render :edit

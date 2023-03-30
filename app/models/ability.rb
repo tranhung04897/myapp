@@ -43,12 +43,16 @@ class Ability
       cannot [:create], User
       can [:manage, :download, :download_data, :export, :ajax_download_data, :delete_order,
            :update_order, :import], OrderInfomation
+      can [:manage], TrackingHistory
+      can [:manage], TrackingHistoryDetail
     else
       cannot [:manage], User
       can [:read], OsiCa
       can [:read], OsiBooker
       can [:manage, :download, :download_data, :export, :ajax_download_data, :delete_order,
            :update_order, :import], OrderInfomation
+      cannot [:manage], TrackingHistory
+      cannot [:manage], TrackingHistoryDetail
     end
   end
 end

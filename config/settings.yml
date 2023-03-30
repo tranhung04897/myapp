@@ -12,10 +12,14 @@ osi_ca_code: ["4267480", "4208982", "4217043", "4287436", "4286030", "4219862", 
           "4216769", "4285353", "4205117", "4201927", "4259710", "4257224"]
 osi_booker_code: ["BKVN02630", "BKVN02574", "BKVN02576", "BKVN02416", "BKVN00469", "BKVN02578", "BKVN03201", "BKVN03204", "BKVN03205"]
 attribute_change:
-  coupon_status: 'Coupon Status'
-  flt_date: 'FLT Date'
-  ticket_number: 'Ticket Number'
+  coupon_status: 'COUPON STATUS'
+  flt_date: 'FLT DATE'
+  ticket_number: 'TICKET NUMBER'
   ag: 'AG'
-  osi_ca: 'Osi Ca'
+  osi_ca: 'OSI CA'
   osi_booker: 'Osi Booker'
-  type_ticket: 'Type Ticket'
+  type_ticket: 'TYPE TICKET'
+  code: 'OSI CODE'
+  name: 'OSI NAME'
+  syntax_osi: 'SYNTAX'
+  limit_value: 'LIMIT VALUE'

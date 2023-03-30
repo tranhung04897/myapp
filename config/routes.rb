@@ -37,4 +37,5 @@ Rails.application.routes.draw do
     end
   end
   delete '/delete_users', to: 'users#delete_users'
+  resources :tracking_histories, only: [:index, :show]
 end

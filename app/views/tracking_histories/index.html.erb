@@ -1,0 +1,63 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class='d-flex justify-content-between'>
+        <h1 class="h3 mb-2 text-gray-800">Histories</h1>
+      </div>
+      <div class="card shadow mb-4 js-table-checkbox-delete">
+        <div class="card-body">
+          <div class='row'>
+            <div class='col-md-8'>
+            </div>
+            <div class='col-md-4'>
+              <div class='d-flex pb-3 justify-content-end'>
+                <div>
+                  <%= select_tag(:paging, options_for_select(Settings.item_paging, @current_per_page),
+                    class: 'form-control-paging form-select') %>
+                </div>
+                <div id="branches__paging" class="ml-3">
+                  <%= search_form_for @q, url: tracking_histories_path, class: 'd-flex' do |f| %>
+                    <%= f.search_field :user_username_cont, value: params[:q].try(:[], :user_username_cont), class: 'form-control', placeholder: 'Search' %>
+                    <%= f.submit 'Search', class: 'btn btn-secondary btn-outline ml-3' %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th><%= sort_link(@q, :date_tracking, 'Date') %></th>
+                  <th class='text-center'>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @trackings.each do |tracking| %>
+                  <tr>
+                    <td><%= tracking.id %></td>
+                    <td><%= tracking.user_username %></td>
+                    <td><%= tracking.date_tracking %></td>
+                    <td class='text-center'><%= link_to 'Detail', tracking_history_path(tracking), class: 'btn btn-secondary' %></td>
+
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-flex-end">
+            <%= paginate @trackings %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+</script>

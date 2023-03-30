@@ -1,0 +1,52 @@
+<%= render partial: 'layouts/sidebar'%>
+<div id="content-wrapper" class="d-flex flex-column">
+  <div id="content">
+    <%= render partial: 'layouts/nav'%>
+    <div class="container-fluid">
+      <div class='d-flex justify-content-between'>
+        <h1 class="h3 mb-2 text-gray-800">Histories</h1>
+      </div>
+      <div class="card shadow mb-4 js-table-checkbox-delete">
+        <div class="card-body">
+          <div class='row'>
+            <div class='col-md-4'>
+              <div class='d-flex pb-3 justify-content-start'>
+                <div>
+                  <%= select_tag(:paging, options_for_select(Settings.item_paging, @current_per_page),
+                    class: 'form-control-paging form-select') %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th><%= sort_link(@q, :created_at, 'DateTime') %></th>
+                  <th>Action</th>
+                  <th>Detail Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @trackings.each do |tracking| %>
+                  <tr>
+                    <td><%= tracking.created_at.strftime('%d/%m/%Y %H:%M:%S') %></td>
+                    <td><%= tracking.action_submit.html_safe %></td>
+                    <td><%= text_area_tag :content, tracking.content.html_safe, class: 'form-control' %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-flex-end">
+            <%= paginate @trackings %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+</script>

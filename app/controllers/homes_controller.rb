@@ -15,11 +15,15 @@ class HomesController < ApplicationController
     # osi_bookers = OsiBooker.pluck(:code, :name).to_h
     # @osi_booker_labels = orders_osi_booker.keys.map { |osi| osi.blank? ? 'No Osi Bookers' : osi_bookers[osi] }
     # @osi_booker_values = orders_osi_booker.values.map { |osis| osis.sum(&:nat_amt) }
-    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date").distinct
+    current_month = Date.current
+    next_two_month = (current_month + 2.months).end_of_month
+    pre_two_month = (current_month - 2.months).beginning_of_month
+    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date")
+                                 .flt_date_range(pre_two_month, next_two_month).distinct
     month_years = month_years.map {|e| e.month_date.to_date }.sort
     @month_years = month_years.map { |e| e.strftime("%m/%Y") }
     @osi_cas = OsiCa.pluck(:code, :name).to_h
-    total_by_osis = OrderInfomation.load_value_by_osi
+    total_by_osis = OrderInfomation.load_value_by_osi.flt_date_range(pre_two_month, next_two_month)
     data = {}
     total_by_osis.each do |e|
       data[e.osi_ca] = {} if data[e.osi_ca].blank?
@@ -27,7 +31,7 @@ class HomesController < ApplicationController
     end
     @total_by_osis = data
     @osi_bookers = OsiBooker.pluck(:code, :name).to_h
-    total_by_osis_booker = OrderInfomation.load_value_by_booker
+    total_by_osis_booker = OrderInfomation.load_value_by_booker.flt_date_range(pre_two_month, next_two_month)
     data_booker = {}
     total_by_osis_booker.each do |e|
       data_booker[e.osi_booker] = {} if data_booker[e.osi_booker].blank?
