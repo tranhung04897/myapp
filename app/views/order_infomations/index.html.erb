@@ -38,16 +38,44 @@
             </div>
             <div class='col-md-10'>
               <div class='d-flex pb-3 justify-content-end'>
-                <div id="branches__paging" class="form-group ml-3">
-                  <%= search_form_for @q, url: order_infomations_path, class: 'd-flex' do |f| %>
-                    <%= f.search_field :flt_date_gteq, value: params[:q].try(:[], :flt_date_gteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
-                    <%= f.search_field :flt_date_lteq, value: params[:q].try(:[], :flt_date_lteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
-                    <%= f.search_field :type_ticket_cont, value: params[:q].try(:[], :type_ticket_cont), class: 'form-control ml-2', placeholder: 'T' %>
-                    <%= f.search_field :class_ticket_cont, value: params[:q].try(:[], :class_ticket_cont), class: 'form-control ml-2', placeholder: 'Class' %>
-                    <%= f.search_field :osi_ca_cont, value: params[:q].try(:[], :osi_ca_cont), class: 'form-control ml-2', placeholder: 'Osi Ca' %>
-                    <%= f.search_field :osi_booker_cont, value: params[:q].try(:[], :osi_booker_cont), class: 'form-control ml-2', placeholder: 'Osi Booker' %>
-                    <%= f.search_field :saler_cont, value: params[:q].try(:[], :saler_cont), class: 'form-control ml-2', placeholder: 'Saler' %>
-                    <%= f.submit 'Search', class: 'btn btn-secondary btn-outline ml-2' %>
+                <div id="branches__paging" class="form-group ml-3 row">
+                  <%= search_form_for @q, url: order_infomations_path, class: 'd-flex flex-column' do |f| %>
+                    <div class='row'>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :issue_date_gteq, value: params[:q].try(:[], :issue_date_gteq), class: 'form-control ml-2', placeholder: 'Issue Date' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :issue_date_lteq, value: params[:q].try(:[], :issue_date_lteq), class: 'form-control ml-2', placeholder: 'Issue Date' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :flt_date_gteq, value: params[:q].try(:[], :flt_date_gteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :flt_date_lteq, value: params[:q].try(:[], :flt_date_lteq), class: 'form-control ml-2', placeholder: 'FLT Date' %>
+                      </div>
+                    </div>
+                    <div class='row'>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :type_ticket_cont, value: params[:q].try(:[], :type_ticket_cont), class: 'form-control ml-2', placeholder: 'T' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :class_ticket_cont, value: params[:q].try(:[], :class_ticket_cont), class: 'form-control ml-2', placeholder: 'Class' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :osi_ca_cont, value: params[:q].try(:[], :osi_ca_cont), class: 'form-control ml-2', placeholder: 'Osi Ca' %>
+                      </div>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :osi_booker_cont, value: params[:q].try(:[], :osi_booker_cont), class: 'form-control ml-2', placeholder: 'Osi Booker' %>
+                      </div>
+                    </div>
+                    <div class='row'>
+                      <div class='col-md-3 pb-3 pl-0'>
+                        <%= f.search_field :saler_cont, value: params[:q].try(:[], :saler_cont), class: 'form-control ml-2', placeholder: 'Saler' %>
+                      </div>
+                      <div class='col-md-3 pl-0'>
+                        <%= f.submit 'Search', class: 'btn btn-secondary btn-outline ml-2' %>
+                      </div>
+                    </div>
                   <% end %>
                 </div>
               </div>

@@ -7,7 +7,6 @@ class OrderInfomationsController < RoleApplicationController
   before_action :load_params_download, only: [:download, :download_data]
 
   def index
-    @text_search = params['q']['ticket_number_or_osi_ca_or_osi_booker_cont'] rescue ''
     @q = @orders.ransack(params[:q])
     result = @q.result.page(params[:page])
     @orders = @current_per_page == Settings.item_paging_all ? result.per(@orders.count) : result.per(@current_per_page)
