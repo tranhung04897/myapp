@@ -51,4 +51,8 @@ class OrderInfomation < ApplicationRecord
       .where.not(osi_ca: ['', nil])
       .group('osi_booker, month_date')
   }
+
+  scope :flt_date_range, lambda { |start_date, end_date|
+    where("flt_date BETWEEN ? AND ?", start_date, end_date)
+  }
 end

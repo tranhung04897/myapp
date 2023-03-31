@@ -52,13 +52,18 @@ class OrderInfomationsController < RoleApplicationController
 
     OrderInfomation.transaction do
       OrderInfomation.upsert_all(data)
+      tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+      content = "#{params[:file].original_filename}"
+      tracking.tracking_history_details.build(action_submit: "Import Excel !!!", content: content)
+      tracking.save
+      osi_cas = OsiCa.all.pluck(:code, :limit_value).to_h
       order_infomations = OrderInfomation.total_by_osi_ca
       order_infomations.each do |osi|
-        osi_ca = OsiCa.find_by(code: osi.osi_ca)
+        osi_ca = osi_cas[osi.osi_ca]
         next if osi_ca.blank?
 
-        if osi_ca.limit_value < osi.total_value.to_i
-          raise StandardError, "OSI #{osi_ca.code}: #{osi.total_value.to_i} limit value exceeded."
+        if osi_ca.to_i < osi.total_value.to_i
+          raise StandardError, "OSI #{osi.osi_ca}: #{osi.total_value.to_i} limit value exceeded."
         end
       end
     rescue StandardError => e
@@ -148,7 +153,6 @@ class OrderInfomationsController < RoleApplicationController
   end
 
   def update_order
-    data = []
     @errors = []
     osi_cas = OsiCa.all.pluck(:code)
     osi_bookers = OsiBooker.all.pluck(:code)
@@ -164,20 +168,34 @@ class OrderInfomationsController < RoleApplicationController
     if params[:osi_booker].present? && !osi_bookers.include?(params[:osi_booker].to_s)
       @errors << "Ticket Number #{params[:ticket_number]}: Osi Booker not exists"
     end
-    data << { id: params[:osi_id], flt_date: flt_date, ticket_number: params[:ticket_number], ag: params[:ag],
-             osi_ca: params[:osi_ca], osi_booker: params[:osi_booker], type_ticket: params[:type_ticket],
-             coupon_status: params[:coupon_status] }
     return if @errors.present?
 
     OrderInfomation.transaction do
-      OrderInfomation.upsert_all(data)
+      order = OrderInfomation.find_by(id: params[:osi_id])
+      return unless order.present?
+
+      order.attributes = { flt_date: flt_date, ag: params[:ag], osi_ca: params[:osi_ca], osi_booker: params[:osi_booker],
+                           coupon_status: params[:coupon_status]}
+      order.save
+      changes = order.previous_changes
+      if changes.present?
+        tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
+        changes.each do |key, value|
+          next if ['updated_at', 'created_at'].include?(key)
+
+          content = "#{Settings.attribute_change.send(key)} updated #{value[0]} => #{value[1]}"
+          tracking.tracking_history_details.build(action_submit: "Update Order #{params[:ticket_number]}", content: content)
+        end
+        tracking.save
+      end
+      osi_cas = OsiCa.all.pluck(:code, :limit_value).to_h
       order_infomations = OrderInfomation.total_by_osi_ca
       order_infomations.each do |osi|
-        osi_ca = OsiCa.find_by(code: osi.osi_ca)
+        osi_ca = osi_cas[osi.osi_ca]
         next if osi_ca.blank?
 
-        if osi_ca.limit_value < osi.total_value.to_i
-          raise StandardError, "OSI #{osi_ca.code}: #{osi.total_value.to_i} limit value exceeded."
+        if osi_ca.to_i < osi.total_value.to_i
+          raise StandardError, "OSI #{osi.osi_ca}: #{osi.total_value.to_i} limit value exceeded."
         end
       end
     rescue StandardError => e
@@ -197,10 +215,10 @@ class OrderInfomationsController < RoleApplicationController
   private
 
   def load_params_download
-    @month_export = OrderInfomation.get_month.distinct.map { |e| [e.month, e.month] }
-    @year_export  = OrderInfomation.get_year.distinct.map { |e| [e.year, e.year] }
-    @month_flt    = OrderInfomation.get_month_flt.distinct.map { |e| [e.month, e.month] }
-    @year_flt     = OrderInfomation.get_year_flt.distinct.map { |e| [e.year, e.year] }
+    @month_export = OrderInfomation.get_month.distinct.map { |e| [e.month, e.month] }.sort
+    @year_export  = OrderInfomation.get_year.distinct.map { |e| [e.year, e.year] }.sort
+    @month_flt    = OrderInfomation.get_month_flt.distinct.map { |e| [e.month, e.month] }.sort
+    @year_flt     = OrderInfomation.get_year_flt.distinct.map { |e| [e.year, e.year] }.sort
     @osi_cas = OsiCa.all.map { |osi| [osi.name, osi.id] }
     @osi_bookers = OsiBooker.all.map { |osi| [osi.name, osi.id] }
   end

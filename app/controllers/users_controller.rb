@@ -12,6 +12,9 @@ class UsersController < RoleApplicationController
 
   def delete_users
     ids = JSON.parse(params['ids']).compact
+    tracking = TrackingHistory.where(user_id: ids)
+    TrackingHistoryDetail.where(tracking_history_id: tracking.ids).delete_all
+    tracking.delete_all
     User.where(id: ids).delete_all
     render js: 'window.location.reload();'
   end

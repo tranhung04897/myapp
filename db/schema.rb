@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_23_101841) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_30_061137) do
   create_table "order_infomations", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.date "issue_date"
     t.date "flt_date"
@@ -57,6 +57,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_23_101841) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tracking_histories", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.date "date_tracking"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date_tracking", "user_id"], name: "index_tracking_histories_on_date_tracking_and_user_id", unique: true
+    t.index ["user_id"], name: "index_tracking_histories_on_user_id"
+  end
+
+  create_table "tracking_history_details", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.bigint "tracking_history_id", null: false
+    t.text "action_submit"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tracking_history_id"], name: "index_tracking_history_details_on_tracking_history_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "email", default: ""
     t.string "name", default: ""
@@ -72,4 +90,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_23_101841) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  add_foreign_key "tracking_histories", "users"
+  add_foreign_key "tracking_history_details", "tracking_histories"
 end
