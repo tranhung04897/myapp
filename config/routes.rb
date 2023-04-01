@@ -38,4 +38,5 @@ Rails.application.routes.draw do
   end
   delete '/delete_users', to: 'users#delete_users'
   resources :tracking_histories, only: [:index, :show]
+  get 'export_osi_ca', to: 'homes#download_osi', as: :export_osi_ca
 end

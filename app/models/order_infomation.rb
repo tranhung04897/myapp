@@ -48,7 +48,7 @@ class OrderInfomation < ApplicationRecord
 
   scope :load_value_by_booker, lambda {
     select('osi_booker, DATE_FORMAT(flt_date, "%m/%Y") as month_date, SUM(fare + charge) AS total_value')
-      .where.not(osi_ca: ['', nil])
+      .where.not(osi_booker: ['', nil])
       .group('osi_booker, month_date')
   }
 
