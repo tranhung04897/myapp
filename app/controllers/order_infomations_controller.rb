@@ -105,8 +105,8 @@ class OrderInfomationsController < RoleApplicationController
 
     if params[:osi_booker].present?
       hash_osi_booker = OsiBooker.all.map { |osi| [osi.id, osi.code] }.to_h
-      osi_booker_name = params[:osi_ca].map { |osi| hash_osi_booker[osi.to_i] }
-      orders = orders.where(osi_ca: osi_booker_name)
+      osi_booker_name = params[:osi_booker].map { |osi| hash_osi_booker[osi.to_i] }
+      orders = orders.where(osi_booker: osi_booker_name)
     end
     path = "#{Rails.root}/tmp/excel"
     origin_name = "#{current_user.id}_my_sheet.xlsx"

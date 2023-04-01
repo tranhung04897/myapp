@@ -39,4 +39,70 @@ class HomesController < ApplicationController
     end
     @total_by_osis_booker = data_booker
   end
+
+  def download_osi
+    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date").distinct
+    month_years = month_years.map {|e| e.month_date.to_date }.sort
+    month_years = month_years.map { |e| e.strftime("%m/%Y") }
+    total_data = {}
+    osi_cas = OsiCa.pluck(:code, :name).to_h
+    total_by_osis = OrderInfomation.load_value_by_osi
+    data = {}
+    total_by_osis.each do |e|
+      data[e.osi_ca] = {} if data[e.osi_ca].blank?
+      data[e.osi_ca].merge!(e.month_date => e.total_value)
+    end
+
+    osi_bookers = OsiBooker.pluck(:code, :name).to_h
+    total_by_osis_booker = OrderInfomation.load_value_by_booker
+    data_booker = {}
+    total_by_osis_booker.each do |e|
+      data_booker[e.osi_booker] = {} if data_booker[e.osi_booker].blank?
+      data_booker[e.osi_booker].merge!(e.month_date => e.total_value)
+    end
+    path = "#{Rails.root}/tmp/excel"
+    FileUtils.mkdir_p(path) unless File.directory?(path)
+    file_path = "#{path}/#{current_user.id}_total_osi.xlsx"
+    File.delete(file_path) if File.exists?(file_path)
+    object = { file_path: file_path, osi_cas: osi_cas, osi_bookers: osi_bookers, data_cas: data, data_bookers: data_booker,
+               month_years: month_years}
+
+    if load_report_osi(object) == :no_error
+      filename = "Report_OSI_#{Time.now.strftime("%Y%m%d")}.xlsx"
+      send_file(file_path,
+                type: "text/xlsx; charset=utf-8; header=present",
+                filename: filename)
+    else
+      redirect_to root_path, danger: "Cannot export Excel"
+    end
+  rescue StandardError => e
+    redirect_to root_path, danger: "Cannot export Excel"
+  end
+
+  private
+
+  def load_report_osi(object)
+
+    workbook = FastExcel.open(object[:file_path])
+    worksheet = workbook.add_worksheet
+
+    bold = workbook.add_format(bold: true, border: :border_thin)
+
+    worksheet.append_row(['Osi Name', 'Osi Code'] + object[:month_years], bold)
+    object[:data_cas].each do |key, value|
+      row = [object[:osi_cas][key], key]
+      object[:month_years].each do |date|
+        row << (value[date].to_i.positive? ? value[date] : 0)
+      end
+      worksheet.append_row(row)
+    end
+    object[:data_bookers].each do |key, value|
+      row = [object[:osi_bookers][key], key]
+      object[:month_years].each do |date|
+        row << (value[date].to_i.positive? ? value[date] : 0)
+      end
+      worksheet.append_row(row)
+    end
+    workbook.close
+  end
 end
