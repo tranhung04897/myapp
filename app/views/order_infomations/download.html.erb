@@ -15,26 +15,36 @@
               <%= render 'layouts/errors_messages' %>
             </div>
             <div class="col-md-12 ml-auto mr-auto">
-              <%= form_with url: download_data_order_infomations_path, local: true, html: {'data-turbo': false, class: 'form-download' } do %>
+              <%= form_with url: download_data_order_infomations_path, local: true, html: {'data-turbo': false, class: 'form-download', data: { controller: 'download' }} do %>
                 <div class='col-md-12'>
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :issue_date_range, "Issue Date Range", class: 'form-label' %>
+                      <%= text_field_tag :issue_date_range, '', { class: 'form-control js-issue-daterange', data: { action: 'change->download#change_issue_range' }} %>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :flt_date_range, "FLT Date Range", class: 'form-label' %>
+                      <%= text_field_tag :flt_date_range, '', { class: 'form-control js-flt-daterange', data: { action: 'change->download#change_flt_range' }} %>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
                       <%= label_tag :year_issue_date, "Year of Issue Date", class: 'form-label' %>
-                      <%= select_tag :year_issue_date, options_for_select(@year_export || [], params[:year_issue_date]), include_blank: true, class: 'form-select' %>
+                      <%= select_tag :year_issue_date, options_for_select(@year_export || [], params[:year_issue_date]), include_blank: true, class: 'form-select', data: { action: 'change->download#change_issue_year' }  %>
                     </div>
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <%= label_tag :month_issue_date, "Month of Issue Date", class: 'form-label' %>
-                      <%= select_tag :month_issue_date, options_for_select(@month_export || [], params[:month_issue_date]), include_blank: true, class: 'form-select' %>
+                      <%= select_tag :month_issue_date, options_for_select(@month_export || [], params[:month_issue_date]), include_blank: true, class: 'form-select', data: { action: 'change->download#change_issue_month' } %>
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <%= label_tag :year_flt_date, "Year of FLT Date", class: 'form-label' %>
-                      <%= select_tag :year_flt_date, options_for_select(@year_flt || [], params[:year_flt_date]), include_blank: true, class: 'form-select' %>
+                      <%= select_tag :year_flt_date, options_for_select(@year_flt || [], params[:year_flt_date]), include_blank: true, class: 'form-select', data: { action: 'change->download#change_flt_year' } %>
                     </div>
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <%= label_tag :month_flt_date, "Month of FLT Date", class: 'form-label' %>
-                      <%= select_tag :month_flt_date, options_for_select(@month_flt || [], params[:month_flt_date]), include_blank: true, class: 'form-select' %>
+                      <%= select_tag :month_flt_date, options_for_select(@month_flt || [], params[:month_flt_date]), include_blank: true, class: 'form-select', data: { action: 'change->download#change_flt_month' } %>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -65,5 +75,59 @@
   $(document).ready(function() {
     $("#osi_ca").select2({});
     $("#osi_booker").select2({});
+    $('.js-issue-daterange').daterangepicker({
+      opens: 'left',
+      language:'auto',
+      applyButtonClasses: 'btn-primary',
+      startDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour').add(-1, 'month'),
+      endDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour'),
+      locale: {
+        applyLabel: 'OK',
+        cancelLabel: 'Cancel',
+        format: 'DD/MM/YYYY',
+      },
+      autoApply: false,
+      autoUpdateInput: false
+    });
+    $('.js-issue-daterange').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+      $('#year_issue_date').prop('disabled', true);
+      $('#month_issue_date').prop('disabled', true);
+
+    });
+
+    $('.js-issue-daterange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      $('#year_issue_date').prop('disabled', false);
+      $('#month_issue_date').prop('disabled', false);
+    });
+
+    $('.js-flt-daterange').daterangepicker({
+      opens: 'left',
+      language:'auto',
+      applyButtonClasses: 'btn-primary',
+      startDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour').add(-1, 'month'),
+      endDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour'),
+      locale: {
+        applyLabel: 'OK',
+        cancelLabel: 'Cancel',
+
+        format: 'DD/MM/YYYY',
+      },
+      autoApply: false,
+      autoUpdateInput: false
+    });
+    $('.js-flt-daterange').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+      $('#year_flt_date').prop('disabled', true);
+      $('#month_flt_date').prop('disabled', true);
+
+    });
+
+    $('.js-flt-daterange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      $('#year_flt_date').prop('disabled', false);
+      $('#month_flt_date').prop('disabled', false);
+    });
   })
 </script>
