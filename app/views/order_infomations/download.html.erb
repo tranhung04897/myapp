@@ -20,6 +20,16 @@
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                       <%= label_tag :year_issue_date, "Year of Issue Date", class: 'form-label' %>
+                      <%= text_field_tag :issue_date_range, '', class: 'form-control js-issue-daterange' %>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :month_issue_date, "Month of Issue Date", class: 'form-label' %>
+                      <%#= select_tag :month_issue_date, options_for_select(@month_export || [], params[:month_issue_date]), include_blank: true, class: 'form-select' %>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                      <%= label_tag :year_issue_date, "Year of Issue Date", class: 'form-label' %>
                       <%= select_tag :year_issue_date, options_for_select(@year_export || [], params[:year_issue_date]), include_blank: true, class: 'form-select' %>
                     </div>
                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -65,5 +75,34 @@
   $(document).ready(function() {
     $("#osi_ca").select2({});
     $("#osi_booker").select2({});
+    $('.js-issue-daterange').daterangepicker({
+      opens: 'left',
+      language:'auto',
+      applyButtonClasses: 'btn-primary',
+      startDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour').add(-1, 'month'),
+      endDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour'),
+      maxDate: moment().tz('Asia/Ho_Chi_Minh').startOf('hour'),
+      locale: {
+        applyLabel: 'OK',
+        cancelLabel: 'Cancel',
+        format: 'MM/DD/YYYY',
+      },
+      autoApply: false,
+      autoUpdateInput: false
+    });
+    $('.js-issue-daterange').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    $('.js-issue-daterange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });
+
+    $('#issue_date_range').on('change', function (){
+      console.log('sss');
+      if ($(this).val().length > 0) {
+        $('#year_issue_date').prop('disable', true);
+      }
+    })
   })
 </script>
