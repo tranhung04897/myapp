@@ -83,8 +83,8 @@ class OrderInfomationsController < RoleApplicationController
     orders = OrderInfomation.all.order(:issue_date).order_by_class
     if params[:issue_date_range].present?
       range_date = params[:issue_date_range].split(" - ")
-      start_date = range_date[0].to_date
-      end_date = range_date[1].to_date
+      start_date = range_date[0].to_date rescue nil
+      end_date = range_date[1].to_date rescue nil
       orders = orders.where("issue_date BETWEEN ? AND ?", start_date, end_date)
     else
       if params[:month_issue_date].present?
@@ -97,8 +97,8 @@ class OrderInfomationsController < RoleApplicationController
     end
     if params[:flt_date_range].present?
       range_date = params[:flt_date_range].split(" - ")
-      start_date = range_date[0].to_date
-      end_date = range_date[1].to_date
+      start_date = range_date[0].to_date rescue nil
+      end_date = range_date[1].to_date rescue nil
       orders = orders.where("flt_date BETWEEN ? AND ?", start_date, end_date)
     else
       if params[:month_flt_date].present?
