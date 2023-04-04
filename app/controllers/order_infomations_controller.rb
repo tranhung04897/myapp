@@ -81,22 +81,34 @@ class OrderInfomationsController < RoleApplicationController
   def download_data
     @errors = []
     orders = OrderInfomation.all.order(:issue_date).order_by_class
-    if params[:month_issue_date].present?
-      orders = orders.by_month(params[:month_issue_date])
-    end
+    if params[:issue_date_range].present?
+      range_date = params[:issue_date_range].split(" - ")
+      start_date = range_date[0].to_date
+      end_date = range_date[1].to_date
+      orders = orders.where("issue_date BETWEEN ? AND ?", start_date, end_date)
+    else
+      if params[:month_issue_date].present?
+        orders = orders.by_month(params[:month_issue_date])
+      end
 
-    if params[:year_issue_date].present?
-      orders = orders.by_year(params[:year_issue_date])
+      if params[:year_issue_date].present?
+        orders = orders.by_year(params[:year_issue_date])
+      end
     end
+    if params[:flt_date_range].present?
+      range_date = params[:flt_date_range].split(" - ")
+      start_date = range_date[0].to_date
+      end_date = range_date[1].to_date
+      orders = orders.where("flt_date BETWEEN ? AND ?", start_date, end_date)
+    else
+      if params[:month_flt_date].present?
+        orders = orders.by_month_flt(params[:month_flt_date])
+      end
 
-    if params[:month_flt_date].present?
-      orders = orders.by_month_flt(params[:month_flt_date])
+      if params[:year_flt_date].present?
+        orders = orders.by_year_flt(params[:year_flt_date])
+      end
     end
-
-    if params[:year_flt_date].present?
-      orders = orders.by_year_flt(params[:year_flt_date])
-    end
-
     if params[:osi_ca].present?
       hash_osi_cas = OsiCa.all.map { |osi| [osi.id, osi.code] }.to_h
       osi_ca_name = params[:osi_ca].map { |osi| hash_osi_cas[osi.to_i] }
