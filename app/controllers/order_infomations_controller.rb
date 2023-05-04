@@ -50,7 +50,7 @@ class OrderInfomationsController < RoleApplicationController
     return if @errors.present?
 
     OrderInfomation.transaction do
-      OrderInfomation.upsert_all(data)
+      insert_order_data(data)
       tracking = TrackingHistory.find_or_initialize_by(date_tracking: Date.current, user_id: current_user.id)
       content = "#{params[:file].original_filename}"
       tracking.tracking_history_details.build(action_submit: "Import Excel !!!", content: content)
@@ -224,6 +224,12 @@ class OrderInfomationsController < RoleApplicationController
   end
 
   private
+
+  def insert_order_data(orders)
+    orders.each_slice(500) do |data|
+      OrderInfomation.upsert_all(data)
+    end
+  end
 
   def load_params_download
     @month_export = OrderInfomation.get_month.distinct.map { |e| [e.month, e.month] }.sort
