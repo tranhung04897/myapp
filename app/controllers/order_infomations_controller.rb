@@ -18,7 +18,7 @@ class OrderInfomationsController < RoleApplicationController
 
     check_file_type_excel(params[:file])
     array_data = read_excel_file(params[:file].path)
-    return @errors << 'File import includes 15 columns. Please check file again!' if array_data.first&.size.to_i != 15
+    return @errors << 'File import includes 16 columns. Please check file again!' if array_data.first&.size.to_i != 16
 
     data = []
     osi_cas = OsiCa.all.pluck(:code)
@@ -43,8 +43,8 @@ class OrderInfomationsController < RoleApplicationController
       end
       data << { issue_date: row[0], flt_date: flt_date, ticket_number: row[2], pax_name: row[3], route: row[4],
                 type_ticket: row[5], pnr: row[6], coupon_status: row[7], class_ticket: row[8], ag: row[9],
-                osi_ca: row[10], osi_booker: row[11], fare: row[12].to_i, charge: row[13].to_i, saler: row[14],
-                nat_amt: row[12].to_i + row[13].to_i
+                osi_ca: row[10], osi_booker: row[11], fare: row[12].to_i, charge: row[13].to_i, saler: row[15],
+                nat_amt: row[12].to_i + row[13].to_i, total_full: row[13].to_i
               }
     end
     return if @errors.present?
@@ -200,7 +200,7 @@ class OrderInfomationsController < RoleApplicationController
         tracking.save
       end
       osi_cas = OsiCa.all.pluck(:code, :limit_value).to_h
-      order_infomations = OrderInfomation.total_by_osi_ca
+      order_infomations = OrderInfomation.total_osi_ca_by_issue_date
       order_infomations.each do |osi|
         osi_ca = osi_cas[osi.osi_ca]
         next if osi_ca.blank?
@@ -268,10 +268,10 @@ class OrderInfomationsController < RoleApplicationController
     bold = workbook.add_format(bold: true, border: :border_thin)
 
     worksheet.append_row(['Issue date', 'FLT Date', 'Ticket Nbr', 'Pax Name', 'Route', 'T', 'PNR', 'Coupon status', 'Class',
-                          'AG', 'OSI CA', 'OSI BOOKER', 'Fare', 'Charge', 'Saler'], bold)
+                          'AG', 'OSI CA', 'OSI BOOKER', 'Fare', 'Charge', 'Total Full', 'Saler'], bold)
     orders.each do |order|
       row = [order.issue_date&.strftime("%d/%m/%Y"), order.flt_date&.strftime("%d/%m/%Y"), order.ticket_number, order.pax_name, order.route, order.type_ticket, order.pnr, order.coupon_status,
-            order.class_ticket, order.ag, order.osi_ca, order.osi_booker, order.fare, order.charge, order.saler]
+            order.class_ticket, order.ag, order.osi_ca, order.osi_booker, order.fare, order.charge, order.total_full, order.saler]
       worksheet.append_row(row)
     end
     workbook.close

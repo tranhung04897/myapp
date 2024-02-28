@@ -19,6 +19,10 @@ class OrderInfomation < ApplicationRecord
     select('osi_ca, DATE_FORMAT(flt_date, "%Y-%m") as month_date, SUM(fare + charge) AS total_value').group('osi_ca, month_date')
   }
 
+  scope :total_osi_ca_by_issue_date, lambda {
+    select('osi_ca, DATE_FORMAT(issue_date, "%Y-%m") as month_date, SUM(total_full) AS total_value').group('osi_ca, month_date')
+  }
+
   scope :get_month_flt, lambda {
     select("MONTH(flt_date) AS month")
   }
@@ -46,6 +50,12 @@ class OrderInfomation < ApplicationRecord
       .group('osi_ca, month_date')
   }
 
+  scope :load_osi_ca_by_issue_date, lambda {
+    select('osi_ca, DATE_FORMAT(issue_date, "%m/%Y") as month_date, SUM(total_full) AS total_value')
+      .where.not(osi_ca: ['', nil])
+      .group('osi_ca, month_date')
+  }
+
   scope :load_value_by_booker, lambda {
     select('osi_booker, DATE_FORMAT(flt_date, "%m/%Y") as month_date, SUM(fare + charge) AS total_value')
       .where.not(osi_booker: ['', nil])
@@ -54,5 +64,9 @@ class OrderInfomation < ApplicationRecord
 
   scope :flt_date_range, lambda { |start_date, end_date|
     where("flt_date BETWEEN ? AND ?", start_date, end_date)
+  }
+
+  scope :issue_date_range, lambda { |start_date, end_date|
+    where("issue_date BETWEEN ? AND ?", start_date, end_date)
   }
 end

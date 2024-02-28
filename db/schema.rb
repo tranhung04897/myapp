@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_30_061137) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_28_151557) do
   create_table "order_infomations", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.date "issue_date"
     t.date "flt_date"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_30_061137) do
     t.string "saler"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "total_full", default: 0
     t.index ["ticket_number", "type_ticket"], name: "index_order_infomations_on_ticket_number_and_type_ticket", unique: true
   end
 

@@ -96,7 +96,7 @@
                 <thead>
                   <tr>
                     <th>Osi Name</th>
-                    <% @month_years.each do |month| %>
+                    <% @osi_ca_month.each do |month| %>
                       <th><%= month %></th>
                     <% end %>
                   </tr>
@@ -107,7 +107,7 @@
                       <td>
                         <%= value %>
                       </td>
-                      <% @month_years.each do |month| %>
+                      <% @osi_ca_month.each do |month| %>
                         <td><%= load_value_osi(@total_by_osis.dig(key)&.dig(month)) %></td>
                       <% end %>
                     </tr>
