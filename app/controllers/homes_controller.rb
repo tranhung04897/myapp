@@ -49,7 +49,7 @@ class HomesController < ApplicationController
     month_years = month_years.map { |e| e.strftime("%m/%Y") }
     total_data = {}
     osi_cas = OsiCa.pluck(:code, :name).to_h
-    total_by_osis = OrderInfomation.load_value_by_osi
+    total_by_osis = OrderInfomation.load_osi_ca_by_issue_date
     data = {}
     total_by_osis.each do |e|
       data[e.osi_ca] = {} if data[e.osi_ca].blank?

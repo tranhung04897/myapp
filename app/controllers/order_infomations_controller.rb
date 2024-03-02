@@ -44,7 +44,7 @@ class OrderInfomationsController < RoleApplicationController
       data << { issue_date: row[0], flt_date: flt_date, ticket_number: row[2], pax_name: row[3], route: row[4],
                 type_ticket: row[5], pnr: row[6], coupon_status: row[7], class_ticket: row[8], ag: row[9],
                 osi_ca: row[10], osi_booker: row[11], fare: row[12].to_i, charge: row[13].to_i, saler: row[15],
-                nat_amt: row[12].to_i + row[13].to_i, total_full: row[13].to_i
+                nat_amt: row[12].to_i + row[13].to_i, total_full: row[14].to_i
               }
     end
     return if @errors.present?
