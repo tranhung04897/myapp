@@ -32,14 +32,16 @@ class OrderInfomationsController < RoleApplicationController
       type_ticket = row[5]
       break @errors << "Row #{index + 1}: Issue Date not exists" if issue_date.nil?
 
-      flt_date = row[1].to_date
-      issue_date_year = issue_date.year
-      flt_date = flt_date.change(year: issue_date_year)
-      case type_ticket
-      when 'S'
-        flt_date = flt_date.change(year: issue_date_year + 1) if flt_date < issue_date
-      else
-        flt_date = flt_date.change(year: issue_date_year - 1) if flt_date < issue_date
+      if flt_date.present?
+          flt_date = row[1].to_date
+          issue_date_year = issue_date.year
+          flt_date = flt_date.change(year: issue_date_year)
+          case type_ticket
+        when 'S'
+          flt_date = flt_date.change(year: issue_date_year + 1) if flt_date < issue_date
+        else
+          flt_date = flt_date.change(year: issue_date_year - 1) if flt_date < issue_date
+        end
       end
       data << { issue_date: row[0], flt_date: flt_date, ticket_number: row[2], pax_name: row[3], route: row[4],
                 type_ticket: row[5], pnr: row[6], coupon_status: row[7], class_ticket: row[8], ag: row[9],
