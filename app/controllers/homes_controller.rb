@@ -19,11 +19,16 @@ class HomesController < ApplicationController
     next_two_month = (current_month + 2.months).end_of_month
     pre_two_month = (current_month - 2.months).beginning_of_month
     month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date")
-                                 .flt_date_range(pre_two_month, next_two_month).distinct
+                                 .flt_date_range(pre_two_month, next_two_month)
+                                 .where.not(flt_date: nil).distinct
+    osi_ca_month = OrderInfomation.select("DATE_FORMAT(issue_date, '%m/%Y') AS month_date")
+                                  .issue_date_range(pre_two_month, next_two_month).distinct
+    osi_ca_month = osi_ca_month.map {|e| e.month_date.to_date }.sort
     month_years = month_years.map {|e| e.month_date.to_date }.sort
+    @osi_ca_month = osi_ca_month.map { |e| e.strftime("%m/%Y") }
     @month_years = month_years.map { |e| e.strftime("%m/%Y") }
     @osi_cas = OsiCa.pluck(:code, :name).to_h
-    total_by_osis = OrderInfomation.load_value_by_osi.flt_date_range(pre_two_month, next_two_month)
+    total_by_osis = OrderInfomation.load_osi_ca_by_issue_date.issue_date_range(pre_two_month, next_two_month)
     data = {}
     total_by_osis.each do |e|
       data[e.osi_ca] = {} if data[e.osi_ca].blank?
@@ -41,12 +46,13 @@ class HomesController < ApplicationController
   end
 
   def download_osi
-    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date").distinct
+    month_years = OrderInfomation.select("DATE_FORMAT(flt_date, '%m/%Y') AS month_date")
+                                 .where.not(flt_date: nil).distinct
     month_years = month_years.map {|e| e.month_date.to_date }.sort
     month_years = month_years.map { |e| e.strftime("%m/%Y") }
     total_data = {}
     osi_cas = OsiCa.pluck(:code, :name).to_h
-    total_by_osis = OrderInfomation.load_value_by_osi
+    total_by_osis = OrderInfomation.load_osi_ca_by_issue_date
     data = {}
     total_by_osis.each do |e|
       data[e.osi_ca] = {} if data[e.osi_ca].blank?
